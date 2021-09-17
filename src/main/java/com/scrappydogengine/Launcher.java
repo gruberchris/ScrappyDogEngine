@@ -1,19 +1,25 @@
 package com.scrappydogengine;
 
+import com.scrappydogengine.core.EngineManager;
 import com.scrappydogengine.core.WindowManager;
-import org.lwjgl.Version;
+import com.scrappydogengine.core.utils.Consts;
 
 public class Launcher {
+    private static WindowManager windowManager;
+    private static EngineManager engineManager;
+
     public static void main(String[] args) {
-        System.out.println(Version.getVersion());
+        windowManager = new WindowManager(Consts.TITLE, 1600, 900, false);
+        engineManager = new EngineManager();
 
-        var window = new WindowManager("Scrappy Dog Engine", 1600, 900, false);
-        window.init();
-
-        while(!window.windowShouldClose()) {
-            window.update();
+        try {
+            engineManager.start();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
 
-        window.cleanup();
+    public static WindowManager getWindowManager() {
+        return windowManager;
     }
 }
