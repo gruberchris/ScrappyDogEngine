@@ -8,12 +8,11 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 public class EngineManager {
     public static final long NANOSECOND = 1000000000L;
     public static final float FRAMERATE = 1000;
+    private static final float FRAMETIME = 1.0f / FRAMERATE;
 
     private static int fps;
-    private static float frametime = 1.0f / FRAMERATE;
 
     private boolean isRunning;
-
     private WindowManager windowManager;
     private GLFWErrorCallback errorCallback;
 
@@ -43,17 +42,17 @@ public class EngineManager {
         while (isRunning) {
             boolean render = false;
             long startTime = System.nanoTime();
-            long passedTime = startTime - lastTime;
+            long elapsedTime = startTime - lastTime;
             lastTime = startTime;
 
-            unprocessedTime += passedTime / (double) NANOSECOND;
-            frameCounter += passedTime;
+            unprocessedTime += elapsedTime / (double) NANOSECOND;
+            frameCounter += elapsedTime;
 
             input();
 
-            while (unprocessedTime > frametime) {
+            while (unprocessedTime > FRAMETIME) {
                 render = true;
-                unprocessedTime -= frametime;
+                unprocessedTime -= FRAMETIME;
 
                 if (windowManager.windowShouldClose())
                     stop();
@@ -84,7 +83,7 @@ public class EngineManager {
     }
 
     private void input() {
-
+        // TODO:
     }
 
     private void render() {
@@ -92,7 +91,7 @@ public class EngineManager {
     }
 
     private void update() {
-
+        // TODO:
     }
 
     private void cleanup() {
