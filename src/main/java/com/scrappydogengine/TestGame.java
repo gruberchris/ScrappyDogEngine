@@ -16,6 +16,7 @@ public class TestGame implements ILogic {
     private final WindowManager windowManager;
     private final ObjectLoader objectLoader;
 
+    // draw basic rectangle in tutorial #5
     private Model model;
 
     public TestGame() {
@@ -28,6 +29,7 @@ public class TestGame implements ILogic {
     public void init() throws Exception {
         renderManager.init();
 
+        // draw basic rectangle in tutorial #5
         float[] vertices = {
                 -0.5f, 0.5f, 0f,
                 -0.5f, -0.5f, 0f,
@@ -68,6 +70,8 @@ public class TestGame implements ILogic {
         }
 
         windowManager.setClearColor(color, color, color, 0.0f);
+
+        // draw basic rectangle in tutorial #5
         renderManager.render(model);
     }
 
