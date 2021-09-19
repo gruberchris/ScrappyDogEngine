@@ -4,6 +4,9 @@ import com.scrappydogengine.Launcher;
 import com.scrappydogengine.core.utils.Consts;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.opengl.GL11;
+
+import static org.lwjgl.opengl.GL11.GL_VERSION;
 
 public class EngineManager {
     public static final long NANOSECOND = 1000000000L;
@@ -36,6 +39,8 @@ public class EngineManager {
     }
 
     public void run() {
+        System.out.println("OpenGL Version: " + GL11.glGetString(GL_VERSION));
+
         isRunning = true;
 
         var frames = 0;
