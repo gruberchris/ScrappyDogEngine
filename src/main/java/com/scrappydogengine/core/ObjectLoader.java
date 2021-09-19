@@ -13,11 +13,11 @@ import java.util.List;
 public class ObjectLoader {
     // vertex array object list
     // coordinates of an object
-    private List<Integer> vaos = new ArrayList<>();
+    private final List<Integer> vaos = new ArrayList<>();
 
-    // vertex array buffer object list
+    // vertex buffer object list
     // coordinates of the texture of an object
-    private List<Integer> vbos = new ArrayList<>();
+    private final List<Integer> vbos = new ArrayList<>();
 
     public Model loadModel(float[] vertices) {
         var id = createVAO();
