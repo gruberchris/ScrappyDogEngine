@@ -17,8 +17,8 @@ public class RenderManager {
 
     public void init() throws Exception {
         shaderManager = new ShaderManager();
-        shaderManager.createVertexShader(Utils.loadResource("/shaders/vertex.vs"));
-        shaderManager.createFragmentShader(Utils.loadResource("/shaders/fragment.fs"));
+        shaderManager.createVertexShader(Utils.loadResource("/shaders/vertex.glsl"));
+        shaderManager.createFragmentShader(Utils.loadResource("/shaders/fragment.glsl"));
         shaderManager.link();
     }
 
