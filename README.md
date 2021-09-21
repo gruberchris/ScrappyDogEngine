@@ -9,3 +9,4 @@ A Lightweight Java OpenGL game engine implementation written while following a g
 4. [Setup Rendering](https://youtu.be/yTNflF0QwOY)
 5. [Basic Rendering](https://youtu.be/f6gVind3jFQ)
 6. [GLSL Basic Color](https://youtu.be/UAc9jLwVI04)
+7. [GLSL Textures](https://youtu.be/pvmVRFihWtw)

@@ -5,6 +5,7 @@ import com.scrappydogengine.core.ObjectLoader;
 import com.scrappydogengine.core.RenderManager;
 import com.scrappydogengine.core.WindowManager;
 import com.scrappydogengine.core.entity.Model;
+import com.scrappydogengine.core.entity.Texture;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
@@ -29,14 +30,11 @@ public class TestGame implements ILogic {
     public void init() throws Exception {
         renderManager.init();
 
-        // draw basic rectangle in tutorial #5
         float[] vertices = {
-                -0.5f, 0.5f, 0f,
+                -0.5f,  0.5f, 0f,
                 -0.5f, -0.5f, 0f,
                 0.5f, -0.5f, 0f,
-                0.5f, -0.5f, 0f,
-                0.5f, 0.5f, 0f,
-                -0.5f, 0.5f, 0f
+                0.5f,  0.5f, 0f,
         };
 
         int[] indices = {
@@ -44,7 +42,15 @@ public class TestGame implements ILogic {
                 3, 1, 2
         };
 
-        model = objectLoader.loadModel(vertices, indices);
+        float[] textureCoords = {
+                0, 0,
+                0, 1,
+                1, 1,
+                1, 0
+        };
+
+        model = objectLoader.loadModel(vertices, textureCoords, indices);
+        model.setTexture(new Texture(objectLoader.loadTexture("textures/grassblock.png")));
     }
 
     @Override

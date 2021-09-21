@@ -6,7 +6,10 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.MemoryStack;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,13 +22,52 @@ public class ObjectLoader {
     // coordinates of the texture of an object
     private final List<Integer> vbos = new ArrayList<>();
 
-    public Model loadModel(float[] vertices, int[] indices) {
+    private final List<Integer> textures = new ArrayList<>();
+
+    public Model loadModel(float[] vertices, float[] textureCoords, int[] indices) {
         var id = createVAO();
         storeIndicesBuffer(indices);
         storeDataInAttribList(0, 3, vertices);
+        storeDataInAttribList(1, 2, textureCoords);
         unbind();
 
-        return new Model(id, vertices.length / 3);
+        return new Model(id, indices.length);
+    }
+
+    public int loadTexture(String filename) throws Exception {
+        int width, height;
+        ByteBuffer byteBuffer;
+
+        try(var stack = MemoryStack.stackPush()) {
+            var w = stack.mallocInt(1);
+            var h = stack.mallocInt(1);
+            var c = stack.mallocInt(1);
+
+            // 4 channels in file: red, green, blue and alpha
+            final int desiredChannels = 4;
+
+            byteBuffer = STBImage.stbi_load(filename, w, h, c, desiredChannels);
+
+            if (byteBuffer == null) {
+                var exceptionMessage = "Texture Image File " + filename + " not loaded " + STBImage.stbi_failure_reason();
+                throw new Exception(exceptionMessage);
+            }
+
+            width = w.get();
+            height = h.get();
+        }
+
+        var id = GL11.glGenTextures();
+
+        textures.add(id);
+
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, id);
+        GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, byteBuffer);
+        GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+        STBImage.stbi_image_free(byteBuffer);
+
+        return id;
     }
 
     private int createVAO() {
@@ -66,5 +108,8 @@ public class ObjectLoader {
 
         for(var vbo: vbos)
             GL30.glDeleteBuffers(vbo);
+
+        for(var texture : textures)
+            GL11.glDeleteTextures(texture);
     }
 }
