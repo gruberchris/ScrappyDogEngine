@@ -2,6 +2,7 @@ package com.scrappydogengine.core;
 
 import com.scrappydogengine.Launcher;
 import com.scrappydogengine.core.utils.Consts;
+import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL11;
@@ -39,6 +40,7 @@ public class EngineManager {
     }
 
     public void run() {
+        System.out.println("LWJGL Version: " + Version.getVersion());
         System.out.println("OpenGL Version: " + GL11.glGetString(GL_VERSION));
 
         isRunning = true;
