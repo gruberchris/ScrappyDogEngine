@@ -37,7 +37,7 @@ public class WindowManager {
         this.resize = resize;
     }
 
-    public boolean isvSync() {
+    public boolean isVSync() {
         return vSync;
     }
 
@@ -94,7 +94,7 @@ public class WindowManager {
 
         GLFW.glfwMakeContextCurrent(window);
 
-        if (isvSync())
+        if (isVSync())
             GLFW.glfwSwapInterval(1);
 
         GLFW.glfwShowWindow(window);
