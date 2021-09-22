@@ -4,8 +4,10 @@ import com.scrappydogengine.core.ILogic;
 import com.scrappydogengine.core.ObjectLoader;
 import com.scrappydogengine.core.RenderManager;
 import com.scrappydogengine.core.WindowManager;
+import com.scrappydogengine.core.entity.Entity;
 import com.scrappydogengine.core.entity.Model;
 import com.scrappydogengine.core.entity.Texture;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
@@ -17,8 +19,7 @@ public class TestGame implements ILogic {
     private final WindowManager windowManager;
     private final ObjectLoader objectLoader;
 
-    // draw basic rectangle in tutorial #5
-    private Model model;
+    private Entity entity;
 
     public TestGame() {
         renderManager = new RenderManager();
@@ -49,8 +50,9 @@ public class TestGame implements ILogic {
                 1, 0
         };
 
-        model = objectLoader.loadModel(vertices, textureCoords, indices);
+        var model = objectLoader.loadModel(vertices, textureCoords, indices);
         model.setTexture(new Texture(objectLoader.loadTexture("textures/grassblock.png")));
+        entity = new Entity(model, new Vector3f(1, 0, 0), new Vector3f(0, 0, 0), 1);
     }
 
     @Override
@@ -71,6 +73,13 @@ public class TestGame implements ILogic {
             color = 1.0f;
         else if (color <= 0)
             color = 0.0f;
+
+        var entityPosition = entity.getPosition();
+
+        if (entityPosition.x < -1.5f)
+            entityPosition.x = 1.5f;
+
+        entityPosition.x -= 0.01f;
     }
 
     @Override
@@ -82,8 +91,7 @@ public class TestGame implements ILogic {
 
         windowManager.setClearColor(color, color, color, 0.0f);
 
-        // draw basic rectangle in tutorial #5
-        renderManager.render(model);
+        renderManager.render(entity);
     }
 
     @Override
