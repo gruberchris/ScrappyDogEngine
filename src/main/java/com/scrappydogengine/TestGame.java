@@ -5,7 +5,6 @@ import com.scrappydogengine.core.ObjectLoader;
 import com.scrappydogengine.core.RenderManager;
 import com.scrappydogengine.core.WindowManager;
 import com.scrappydogengine.core.entity.Entity;
-import com.scrappydogengine.core.entity.Model;
 import com.scrappydogengine.core.entity.Texture;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
