@@ -11,3 +11,4 @@ A Lightweight Java OpenGL game engine implementation written while following a g
 6. [GLSL Basic Color](https://youtu.be/UAc9jLwVI04)
 7. [GLSL Textures](https://youtu.be/pvmVRFihWtw)
 8. [Entities](https://youtu.be/MvOkM11C3sU)
+9. [Camera Movement](https://youtu.be/jcABuvG-9E8)

@@ -1,9 +1,6 @@
 package com.scrappydogengine;
 
-import com.scrappydogengine.core.ILogic;
-import com.scrappydogengine.core.ObjectLoader;
-import com.scrappydogengine.core.RenderManager;
-import com.scrappydogengine.core.WindowManager;
+import com.scrappydogengine.core.*;
 import com.scrappydogengine.core.entity.Entity;
 import com.scrappydogengine.core.entity.Texture;
 import org.joml.Vector3f;
@@ -11,74 +8,117 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 public class TestGame implements ILogic {
-    private int direction = 0;
-    private float color = 0.0f;
+    private static final float CAMERA_MOVE_SPEED = 0.05f;
 
     private final RenderManager renderManager;
     private final WindowManager windowManager;
     private final ObjectLoader objectLoader;
 
     private Entity entity;
+    private Camera camera;
+
+    Vector3f cameraInc;
 
     public TestGame() {
         renderManager = new RenderManager();
         windowManager = Launcher.getWindowManager();
         objectLoader = new ObjectLoader();
+        camera = new Camera();
+        cameraInc = new Vector3f(0, 0, 0);
     }
 
     @Override
     public void init() throws Exception {
         renderManager.init();
 
-        float[] vertices = {
-                -0.5f,  0.5f, 0f,
-                -0.5f, -0.5f, 0f,
-                0.5f, -0.5f, 0f,
-                0.5f,  0.5f, 0f,
+        float[] vertices = new float[] {
+                -0.5f, 0.5f, 0.5f,
+                -0.5f, -0.5f, 0.5f,
+                0.5f, -0.5f, 0.5f,
+                0.5f, 0.5f, 0.5f,
+                -0.5f, 0.5f, -0.5f,
+                0.5f, 0.5f, -0.5f,
+                -0.5f, -0.5f, -0.5f,
+                0.5f, -0.5f, -0.5f,
+                -0.5f, 0.5f, -0.5f,
+                0.5f, 0.5f, -0.5f,
+                -0.5f, 0.5f, 0.5f,
+                0.5f, 0.5f, 0.5f,
+                0.5f, 0.5f, 0.5f,
+                0.5f, -0.5f, 0.5f,
+                -0.5f, 0.5f, 0.5f,
+                -0.5f, -0.5f, 0.5f,
+                -0.5f, -0.5f, -0.5f,
+                0.5f, -0.5f, -0.5f,
+                -0.5f, -0.5f, 0.5f,
+                0.5f, -0.5f, 0.5f,
         };
 
-        int[] indices = {
-                0, 1, 3,
-                3, 1, 2
+        float[] textureCoords = new float[]{
+                0.0f, 0.0f,
+                0.0f, 0.5f,
+                0.5f, 0.5f,
+                0.5f, 0.0f,
+                0.0f, 0.0f,
+                0.5f, 0.0f,
+                0.0f, 0.5f,
+                0.5f, 0.5f,
+                0.0f, 0.5f,
+                0.5f, 0.5f,
+                0.0f, 1.0f,
+                0.5f, 1.0f,
+                0.0f, 0.0f,
+                0.0f, 0.5f,
+                0.5f, 0.0f,
+                0.5f, 0.5f,
+                0.5f, 0.0f,
+                1.0f, 0.0f,
+                0.5f, 0.5f,
+                1.0f, 0.5f,
         };
 
-        float[] textureCoords = {
-                0, 0,
-                0, 1,
-                1, 1,
-                1, 0
+        int[] indices = new int[]{
+                0, 1, 3, 3, 1, 2,
+                8, 10, 11, 9, 8, 11,
+                12, 13, 7, 5, 12, 7,
+                14, 15, 6, 4, 14, 6,
+                16, 18, 19, 17, 16, 19,
+                4, 6, 7, 5, 4, 7,
         };
 
         var model = objectLoader.loadModel(vertices, textureCoords, indices);
         model.setTexture(new Texture(objectLoader.loadTexture("textures/grassblock.png")));
-        entity = new Entity(model, new Vector3f(1, 0, 0), new Vector3f(0, 0, 0), 1);
+        entity = new Entity(model, new Vector3f(0, 0, -5), new Vector3f(0, 0, 0), 1);
     }
 
     @Override
     public void input() {
-        if (windowManager.isKeyPressed(GLFW.GLFW_KEY_UP))
-            direction = 1;
-        else if (windowManager.isKeyPressed(GLFW.GLFW_KEY_DOWN))
-            direction = -1;
-        else
-            direction = 0;
+        cameraInc.set(0, 0, 0);
+
+        if (windowManager.isKeyPressed(GLFW.GLFW_KEY_W))
+            cameraInc.z = -1;
+
+        if (windowManager.isKeyPressed(GLFW.GLFW_KEY_S))
+            cameraInc.z = 1;
+
+        if (windowManager.isKeyPressed(GLFW.GLFW_KEY_A))
+            cameraInc.x = -1;
+
+        if (windowManager.isKeyPressed(GLFW.GLFW_KEY_D))
+            cameraInc.x = 1;
+
+        if (windowManager.isKeyPressed(GLFW.GLFW_KEY_Z))
+            cameraInc.y = -1;
+
+        if (windowManager.isKeyPressed(GLFW.GLFW_KEY_X))
+            cameraInc.y = 1;
     }
 
     @Override
     public void update() {
-        color += direction * 0.01f;
+        camera.movePosition(cameraInc.x * CAMERA_MOVE_SPEED, cameraInc.y * CAMERA_MOVE_SPEED, cameraInc.z * CAMERA_MOVE_SPEED);
 
-        if (color > 1)
-            color = 1.0f;
-        else if (color <= 0)
-            color = 0.0f;
-
-        var entityPosition = entity.getPosition();
-
-        if (entityPosition.x < -1.5f)
-            entityPosition.x = 1.5f;
-
-        entityPosition.x -= 0.01f;
+        entity.incrementRotation(0.0f, 0.5f, 0.0f);
     }
 
     @Override
@@ -88,9 +128,11 @@ public class TestGame implements ILogic {
             windowManager.setResize(true);
         }
 
+        var color = 0.0f;
+
         windowManager.setClearColor(color, color, color, 0.0f);
 
-        renderManager.render(entity);
+        renderManager.render(entity, camera);
     }
 
     @Override

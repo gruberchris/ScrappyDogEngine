@@ -2,7 +2,6 @@ package com.scrappydogengine.core;
 
 import com.scrappydogengine.Launcher;
 import com.scrappydogengine.core.entity.Entity;
-import com.scrappydogengine.core.entity.Model;
 import com.scrappydogengine.core.utils.Transformation;
 import com.scrappydogengine.core.utils.Utils;
 import org.lwjgl.opengl.GL11;
@@ -15,6 +14,8 @@ public class RenderManager {
     private ShaderManager shaderManager;
     private final String textureSamplerUniformName = "textureSampler";
     private final String transformationMatrixUniformName = "transformationMatrix";
+    private final String projectionMatrixUniformName = "projectionMatrix";
+    private final String viewMatrixUniformName = "viewMatrix";
 
     public RenderManager() {
         windowManager = Launcher.getWindowManager();
@@ -27,9 +28,11 @@ public class RenderManager {
         shaderManager.link();
         shaderManager.createUniform(textureSamplerUniformName);
         shaderManager.createUniform(transformationMatrixUniformName);
+        shaderManager.createUniform(projectionMatrixUniformName);
+        shaderManager.createUniform(viewMatrixUniformName);
     }
 
-    public void render(Entity entity) {
+    public void render(Entity entity, Camera camera) {
         var model = entity.getModel();
 
         clear();
@@ -37,6 +40,9 @@ public class RenderManager {
         shaderManager.bind();
         shaderManager.setUniform(textureSamplerUniformName, 0);
         shaderManager.setUniform(transformationMatrixUniformName, Transformation.createTransformationMatrix(entity));
+        shaderManager.setUniform(projectionMatrixUniformName, windowManager.updateProjectionMatrix());
+        shaderManager.setUniform(viewMatrixUniformName, Transformation.getViewMatrix(camera));
+
         GL30.glBindVertexArray(model.getId());
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);
