@@ -12,3 +12,4 @@ A Lightweight Java OpenGL game engine implementation written while following a g
 7. [GLSL Textures](https://youtu.be/pvmVRFihWtw)
 8. [Entities](https://youtu.be/MvOkM11C3sU)
 9. [Camera Movement](https://youtu.be/jcABuvG-9E8)
+10. [Mouse Input](https://youtu.be/wMLVeKASbHw)

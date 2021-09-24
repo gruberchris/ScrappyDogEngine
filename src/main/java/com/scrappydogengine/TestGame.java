@@ -3,6 +3,7 @@ package com.scrappydogengine;
 import com.scrappydogengine.core.*;
 import com.scrappydogengine.core.entity.Entity;
 import com.scrappydogengine.core.entity.Texture;
+import com.scrappydogengine.core.utils.Consts;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
@@ -118,8 +119,13 @@ public class TestGame implements ILogic {
     }
 
     @Override
-    public void update() {
+    public void update(float interval, MouseInput mouseInput) {
         camera.movePosition(cameraInc.x * CAMERA_MOVE_SPEED, cameraInc.y * CAMERA_MOVE_SPEED, cameraInc.z * CAMERA_MOVE_SPEED);
+
+        if (mouseInput.isRightButtonPress()) {
+            var rotateVector = mouseInput.getDisplayVector();
+            camera.moveRotation(rotateVector.x * Consts.MOUSE_SENSITIVITY, rotateVector.y * Consts.MOUSE_SENSITIVITY, 0);
+        }
 
         entity.incrementRotation(0.0f, 0.5f, 0.0f);
     }
