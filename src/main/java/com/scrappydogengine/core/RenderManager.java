@@ -11,11 +11,12 @@ import org.lwjgl.opengl.GL30;
 
 public class RenderManager {
     private final WindowManager windowManager;
-    private ShaderManager shaderManager;
     private final String textureSamplerUniformName = "textureSampler";
     private final String transformationMatrixUniformName = "transformationMatrix";
     private final String projectionMatrixUniformName = "projectionMatrix";
     private final String viewMatrixUniformName = "viewMatrix";
+
+    private ShaderManager shaderManager;
 
     public RenderManager() {
         windowManager = Launcher.getWindowManager();

@@ -14,11 +14,10 @@ public class TestGame implements ILogic {
     private final RenderManager renderManager;
     private final WindowManager windowManager;
     private final ObjectLoader objectLoader;
+    private final Camera camera;
+    private final Vector3f cameraInc;
 
     private Entity entity;
-    private Camera camera;
-
-    Vector3f cameraInc;
 
     public TestGame() {
         renderManager = new RenderManager();
