@@ -2,6 +2,9 @@ package com.scrappydogengine.core;
 
 import com.scrappydogengine.core.entity.Model;
 import com.scrappydogengine.core.utils.Utils;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+import org.joml.Vector3i;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
@@ -23,6 +26,114 @@ public class ObjectLoader {
     private final List<Integer> vbos = new ArrayList<>();
 
     private final List<Integer> textures = new ArrayList<>();
+
+    public Model loadObjModel(String fileName) {
+        var lines = Utils.readAllLines(fileName);
+
+        var vertices = new ArrayList<Vector3f>();
+        var normals = new ArrayList<Vector3f>();
+        var textures = new ArrayList<Vector2f>();
+        var faces = new ArrayList<Vector3i>();
+
+        for (String line : lines) {
+            var tokens = line.split("\\s+");
+            switch (tokens[0]) {
+                case "v":
+                    // vertices
+                    var verticesVec = new Vector3f(
+                            Float.parseFloat(tokens[1]),
+                            Float.parseFloat(tokens[2]),
+                            Float.parseFloat(tokens[3])
+                    );
+                    vertices.add(verticesVec);
+                    break;
+                case "vt":
+                    // vertex textures
+                    var textureVec = new Vector2f(
+                            Float.parseFloat(tokens[1]),
+                            Float.parseFloat(tokens[2])
+                    );
+                    textures.add(textureVec);
+                    break;
+                case "vn":
+                    // vertex normals
+                    var normalsVec = new Vector3f(
+                            Float.parseFloat(tokens[1]),
+                            Float.parseFloat(tokens[2]),
+                            Float.parseFloat(tokens[3])
+                    );
+                    normals.add(normalsVec);
+                    break;
+                case "f":
+                    // faces
+                    processFace(tokens[1], faces);
+                    processFace(tokens[2], faces);
+                    processFace(tokens[3], faces);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        var indices = new ArrayList<Integer>();
+        var verticesArray = new float[vertices.size() * 3];
+        var i = 0;
+
+        for(var pos : vertices) {
+            verticesArray[i * 3] = pos.x;
+            verticesArray[i * 3 + 1] = pos.y;
+            verticesArray[i * 3 + 2] = pos.z;
+            i++;
+        }
+
+        var textureCoordinateArray = new float[vertices.size() * 2];
+        var normalArray = new float[vertices.size() * 3];
+
+        for (var face : faces) {
+            processVertex(face.x, face.y, face.z, textures, normals, indices, textureCoordinateArray, normalArray);
+        }
+
+        var indicesArray = indices.stream().mapToInt((Integer v) -> v).toArray();
+
+        return loadModel(verticesArray, textureCoordinateArray, indicesArray);
+    }
+
+    private static void processVertex(int pos, int textCoord, int normal, List<Vector2f> texCoordList, List<Vector3f> normalList, List<Integer> indicesList, float[] texCoordArr, float[] normalArr) {
+        indicesList.add(pos);
+
+        if (textCoord >= 0) {
+            var texCoordVec = texCoordList.get(textCoord);
+            texCoordArr[pos * 2] = texCoordVec.x;
+            texCoordArr[pos * 2 + 1] = 1 - texCoordVec.y;
+        }
+
+        if (normal >= 0) {
+            var normalVec = normalList.get(normal);
+            normalArr[pos * 3] = normalVec.x;
+            normalArr[pos * 3 + 1] = normalVec.y;
+            normalArr[pos * 3 + 2] = normalVec.z;
+        }
+    }
+
+    private static void processFace(String token, List<Vector3i> faces) {
+        var lineToken = token.split("/");
+        var length = lineToken.length;
+        int coords = -1, normal = -1;
+
+        var pos = Integer.parseInt(lineToken[0]) - 1;
+
+        if (length > 1) {
+            var textCoord = lineToken[1];
+            coords = textCoord.length() > 0 ? Integer.parseInt(textCoord) - 1: -1;
+
+            if (length > 2)
+                normal = Integer.parseInt(lineToken[2]) - 1;
+        }
+
+        var facesVec = new Vector3i(pos, coords, normal);
+
+        faces.add(facesVec);
+    }
 
     public Model loadModel(float[] vertices, float[] textureCoords, int[] indices) {
         var id = createVAO();
