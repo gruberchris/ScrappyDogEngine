@@ -38,7 +38,7 @@ public class ObjectLoader {
         for (String line : lines) {
             var tokens = line.split("\\s+");
             switch (tokens[0]) {
-                case "v":
+                case "v" -> {
                     // vertices
                     var verticesVec = new Vector3f(
                             Float.parseFloat(tokens[1]),
@@ -46,16 +46,16 @@ public class ObjectLoader {
                             Float.parseFloat(tokens[3])
                     );
                     vertices.add(verticesVec);
-                    break;
-                case "vt":
+                }
+                case "vt" -> {
                     // vertex textures
                     var textureVec = new Vector2f(
                             Float.parseFloat(tokens[1]),
                             Float.parseFloat(tokens[2])
                     );
                     textures.add(textureVec);
-                    break;
-                case "vn":
+                }
+                case "vn" -> {
                     // vertex normals
                     var normalsVec = new Vector3f(
                             Float.parseFloat(tokens[1]),
@@ -63,15 +63,15 @@ public class ObjectLoader {
                             Float.parseFloat(tokens[3])
                     );
                     normals.add(normalsVec);
-                    break;
-                case "f":
+                }
+                case "f" -> {
                     // faces
                     processFace(tokens[1], faces);
                     processFace(tokens[2], faces);
                     processFace(tokens[3], faces);
-                    break;
-                default:
-                    break;
+                }
+                default -> {
+                }
             }
         }
 
