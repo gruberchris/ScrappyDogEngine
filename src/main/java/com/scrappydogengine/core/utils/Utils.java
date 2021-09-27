@@ -10,6 +10,7 @@ import java.nio.IntBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Utils {
@@ -39,7 +40,7 @@ public class Utils {
     public static List<String> readAllLines(String fileName) {
         var list = new ArrayList<String>();
 
-        try(var bufferReader = new BufferedReader(new InputStreamReader(Class.forName(Utils.class.getName()).getResourceAsStream(fileName)))) {
+        try(var bufferReader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(Class.forName(Utils.class.getName()).getResourceAsStream(fileName))))) {
             String line;
 
             while((line = bufferReader.readLine()) != null) {
