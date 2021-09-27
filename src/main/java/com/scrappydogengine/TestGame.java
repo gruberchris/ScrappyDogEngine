@@ -35,7 +35,7 @@ public class TestGame implements ILogic {
 
         var model = objectLoader.loadObjModel("/models/bunny.obj");
         model.setTexture(new Texture(objectLoader.loadTexture("textures/grassblock.png")));
-        entity = new Entity(model, new Vector3f(0, 0, -5), new Vector3f(0, 0, 0), 1);
+        entity = new Entity(model, new Vector3f(0, 0, -2), new Vector3f(0, 0, 0), 1);
     }
 
     @Override
