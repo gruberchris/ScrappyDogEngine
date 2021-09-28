@@ -30,9 +30,6 @@ public class TestGame implements ILogic {
     @Override
     public void init() throws Exception {
         renderManager.init();
-
-
-
         var model = objectLoader.loadObjModel("/models/bunny.obj");
         model.setTexture(new Texture(objectLoader.loadTexture("textures/grassblock.png")));
         entity = new Entity(model, new Vector3f(0, 0, -2), new Vector3f(0, 0, 0), 1);
@@ -60,7 +57,7 @@ public class TestGame implements ILogic {
         if (windowManager.isKeyPressed(GLFW.GLFW_KEY_X))
             cameraInc.y = 1;
 
-        if (windowManager.isKeyPressed(GLFW.GLFW_KEY_TAB)) {
+        if (windowManager.isKeyPressed(GLFW.GLFW_KEY_C)) {
             camera.setPosition(0, 0, 0);
             camera.setRotation(0, 0, 0);
         }
