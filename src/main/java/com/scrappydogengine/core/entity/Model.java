@@ -1,25 +1,29 @@
 package com.scrappydogengine.core.entity;
 
+import org.w3c.dom.Text;
+
 public class Model {
     private int id;
     private int vertexCount;
-    private Texture texture;
+    private Material material;
 
     public Model(int id, int vertexCount) {
         this.id = id;
         this.vertexCount = vertexCount;
+        material = new Material();
     }
 
     public Model(int id, int vertexCount, Texture texture) {
         this.id = id;
         this.vertexCount = vertexCount;
-        this.texture = texture;
+        material = new Material(texture);
     }
 
     public Model(Model model, Texture texture) {
-        this.id = model.getId();
-        this.vertexCount = model.getVertexCount();
-        this.texture = texture;
+        id = model.getId();
+        vertexCount = model.getVertexCount();
+        material = model.getMaterial();
+        material.setTexture(texture);
     }
 
     public int getId() {
@@ -30,11 +34,24 @@ public class Model {
         return vertexCount;
     }
 
-    public Texture getTexture() {
-        return texture;
+    public Material getMaterial() {
+        return material;
     }
 
-    public void setTexture(Texture texture) {
-        this.texture = texture;
+    public void setMaterial(Material material) {
+        this.material = material;
+    }
+
+    public Texture getTexture() {
+        return material.getTexture();
+    }
+
+    public void setMaterial(Texture texture) {
+        material.setTexture(texture);
+    }
+
+    public void setTexture(Texture texture, float reflectance) {
+        material.setTexture(texture);
+        material.setReflectance(reflectance);
     }
 }

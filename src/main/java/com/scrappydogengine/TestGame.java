@@ -31,7 +31,7 @@ public class TestGame implements ILogic {
     public void init() throws Exception {
         renderManager.init();
         var model = objectLoader.loadObjModel("/models/bunny.obj");
-        model.setTexture(new Texture(objectLoader.loadTexture("textures/grassblock.png")));
+        model.setTexture(new Texture(objectLoader.loadTexture("textures/grassblock.png")), 1f);
         entity = new Entity(model, new Vector3f(0, 0, -2), new Vector3f(0, 0, 0), 1);
     }
 
@@ -72,20 +72,11 @@ public class TestGame implements ILogic {
             camera.moveRotation(rotateVector.x * Consts.MOUSE_SENSITIVITY, rotateVector.y * Consts.MOUSE_SENSITIVITY, 0);
         }
 
-        entity.incrementRotation(0.0f, 0.5f, 0.0f);
+        entity.incrementRotation(0.0f, 0.25f, 0.0f);
     }
 
     @Override
     public void render() {
-        if (windowManager.isResize()) {
-            GL11.glViewport(0, 0, windowManager.getWidth(), windowManager.getHeight());
-            windowManager.setResize(true);
-        }
-
-        var color = 0.0f;
-
-        windowManager.setClearColor(color, color, color, 0.0f);
-
         renderManager.render(entity, camera);
     }
 

@@ -2,6 +2,7 @@ package com.scrappydogengine.core;
 
 import com.scrappydogengine.Launcher;
 import com.scrappydogengine.core.entity.Entity;
+import com.scrappydogengine.core.utils.Consts;
 import com.scrappydogengine.core.utils.Transformation;
 import com.scrappydogengine.core.utils.Utils;
 import org.lwjgl.opengl.GL11;
@@ -15,6 +16,8 @@ public class RenderManager {
     private final String transformationMatrixUniformName = "transformationMatrix";
     private final String projectionMatrixUniformName = "projectionMatrix";
     private final String viewMatrixUniformName = "viewMatrix";
+    private final String ambientLightUniformName = "ambientLight";
+    private final String materialUniformName = "material";
 
     private ShaderManager shaderManager;
 
@@ -31,6 +34,8 @@ public class RenderManager {
         shaderManager.createUniform(transformationMatrixUniformName);
         shaderManager.createUniform(projectionMatrixUniformName);
         shaderManager.createUniform(viewMatrixUniformName);
+        shaderManager.createUniform(ambientLightUniformName);
+        shaderManager.createMaterialUniform(materialUniformName);
     }
 
     public void render(Entity entity, Camera camera) {
@@ -38,15 +43,23 @@ public class RenderManager {
 
         clear();
 
+        if (windowManager.isResize()) {
+            GL11.glViewport(0, 0, windowManager.getWidth(), windowManager.getHeight());
+            windowManager.setResize(true);
+        }
+
         shaderManager.bind();
         shaderManager.setUniform(textureSamplerUniformName, 0);
         shaderManager.setUniform(transformationMatrixUniformName, Transformation.createTransformationMatrix(entity));
         shaderManager.setUniform(projectionMatrixUniformName, windowManager.updateProjectionMatrix());
         shaderManager.setUniform(viewMatrixUniformName, Transformation.getViewMatrix(camera));
+        shaderManager.setUniform(ambientLightUniformName, Consts.AMBIENT_LIGHT);
+        shaderManager.setUniform(materialUniformName, entity.getModel().getMaterial());
 
         GL30.glBindVertexArray(model.getId());
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);
+        GL20.glEnableVertexAttribArray(2);
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getId());
 
@@ -55,6 +68,7 @@ public class RenderManager {
 
         GL20.glDisableVertexAttribArray(0);
         GL20.glDisableVertexAttribArray(1);
+        GL20.glDisableVertexAttribArray(2);
         GL30.glBindVertexArray(0);
 
         shaderManager.unbind();

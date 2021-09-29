@@ -14,3 +14,4 @@ A Lightweight Java OpenGL game engine implementation written while following a g
 9. [Camera Movement](https://youtu.be/jcABuvG-9E8)
 10. [Mouse Input](https://youtu.be/wMLVeKASbHw)
 11. [Object File Loader](https://youtu.be/C-U7OpCLSGE)
+12. [Ambient Light](https://youtu.be/NGypetdOoY0)
