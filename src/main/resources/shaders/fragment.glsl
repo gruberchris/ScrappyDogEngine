@@ -14,15 +14,22 @@ struct Material {
     float reflectance;
 };
 
+struct DirectionalLight {
+    vec3 color;
+    vec3 direction;
+    float intensity;
+};
+
 uniform sampler2D textureSampler;
 uniform vec3 ambientLight;
 uniform Material material;
+uniform float specularPower;
+uniform DirectionalLight directionalLight;
 
 vec4 ambientC;
-//vec4 diffuseC;
-//vec4 specularC;
+vec4 diffuseC;
+vec4 specularC;
 
-/*
 void setupColors(Material material, vec2 textureCoordinates) {
     if (material.hasTexture == 1) {
         ambientC = texture(textureSampler, textureCoordinates);
@@ -34,17 +41,34 @@ void setupColors(Material material, vec2 textureCoordinates) {
         specularC = material.specular;
     }
 }
-*/
+
+vec4 calcLightColor(vec3 light_color, float light_intensity, vec3 position, vec3 to_light_direction, vec3 normal) {
+    vec4 diffuseColor = vec4(0, 0, 0, 0);
+    vec4 specularColor = vec4(0, 0, 0, 0);
+
+    // diffuse light
+    float diffuseFactor = max(dot(normal, to_light_direction), 0.0);
+    diffuseColor = diffuseC * vec4(light_color, 1.0) * light_intensity * diffuseFactor;
+
+    // specular color
+    vec3 camera_direction = normalize(-position);
+    vec3 from_light_direction = -to_light_direction;
+    vec3 reflectedLight = normalize(reflect(from_light_direction, normal));
+    float specularFactor = max(dot(camera_direction, reflectedLight), 0.0);
+    specularFactor = pow(specularFactor, specularPower);
+    specularColor = specularC * light_intensity * specularFactor * material.reflectance * vec4(light_color, 1.0);
+
+    return diffuseColor + specularColor;
+}
+
+vec4 calcDirectionalLight(DirectionalLight directionalLight, vec3 position, vec3 normal) {
+    return calcLightColor(directionalLight.color, directionalLight.intensity, position, normalize(directionalLight.direction), normal);
+}
 
 void main() {
-    //setupColors(material, textureCoordFragment);
-    //fragmentColor = ambientC * vec4(ambientLight, 1);
+    setupColors(material, textureCoordFragment);
 
-    if (material.hasTexture == 1) {
-        ambientC = texture(textureSampler, textureCoordFragment);
-    } else {
-        ambientC = material.ambient + material.specular + material.diffuse + material.reflectance;
-    }
+    vec4 diffuseSpecularComp = calcDirectionalLight(directionalLight, fragPos, fragNormal);
 
-    fragmentColor = ambientC * vec4(ambientLight, 1);
+    fragmentColor = ambientC * vec4(ambientLight, 1) + diffuseSpecularComp;
 }

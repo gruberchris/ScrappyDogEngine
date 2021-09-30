@@ -3,6 +3,7 @@ package com.scrappydogengine;
 import com.scrappydogengine.core.*;
 import com.scrappydogengine.core.entity.Entity;
 import com.scrappydogengine.core.entity.Texture;
+import com.scrappydogengine.core.lighting.DirectionalLight;
 import com.scrappydogengine.core.utils.Consts;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
@@ -18,6 +19,8 @@ public class TestGame implements ILogic {
     private final Vector3f cameraInc;
 
     private Entity entity;
+    private float lightAngle;
+    private DirectionalLight directionalLight;
 
     public TestGame() {
         renderManager = new RenderManager();
@@ -25,6 +28,7 @@ public class TestGame implements ILogic {
         objectLoader = new ObjectLoader();
         camera = new Camera();
         cameraInc = new Vector3f(0, 0, 0);
+        lightAngle = -90;
     }
 
     @Override
@@ -33,6 +37,11 @@ public class TestGame implements ILogic {
         var model = objectLoader.loadObjModel("/models/bunny.obj");
         model.setTexture(new Texture(objectLoader.loadTexture("textures/grassblock.png")), 1f);
         entity = new Entity(model, new Vector3f(0, 0, -2), new Vector3f(0, 0, 0), 1);
+
+        var lightIntensity = 0.0f;
+        var lightPosition = new Vector3f(-1, -10, 0);
+        var lightColor = new Vector3f(1, 1, 1);
+        directionalLight = new DirectionalLight(lightColor, lightPosition, lightIntensity);
     }
 
     @Override
@@ -72,12 +81,36 @@ public class TestGame implements ILogic {
             camera.moveRotation(rotateVector.x * Consts.MOUSE_SENSITIVITY, rotateVector.y * Consts.MOUSE_SENSITIVITY, 0);
         }
 
-        entity.incrementRotation(0.0f, 0.25f, 0.0f);
+        // entity.incrementRotation(0.0f, 0.25f, 0.0f);
+
+        // a basic day-night environment light cycle
+        lightAngle += 0.5f;
+
+        if (lightAngle > 90) {
+            directionalLight.setIntensity(0);
+
+            if (lightAngle >= 360)
+                lightAngle = -90;
+        } else if (lightAngle <= -80 || lightAngle >= 80) {
+            var factor = 1 - (Math.abs(lightAngle) - 80) / 10.0f;
+            directionalLight.setIntensity(factor);
+            directionalLight.getColor().y = Math.max(factor, 0.9f);
+            directionalLight.getColor().z = Math.max(factor, 0.5f);
+        } else {
+            directionalLight.setIntensity(1);
+            directionalLight.getColor().x = 1;
+            directionalLight.getColor().y = 1;
+            directionalLight.getColor().z = 1;
+        }
+
+        var angRad = Math.toRadians(lightAngle);
+        directionalLight.getDirection().x = (float) Math.sin(angRad);
+        directionalLight.getDirection().y = (float) Math.cos(angRad);
     }
 
     @Override
     public void render() {
-        renderManager.render(entity, camera);
+        renderManager.render(entity, camera, directionalLight);
     }
 
     @Override
