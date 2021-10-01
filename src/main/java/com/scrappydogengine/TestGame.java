@@ -81,6 +81,12 @@ public class TestGame implements ILogic {
             camera.setPosition(0, 0, 0);
             camera.setRotation(0, 0, 0);
         }
+
+        if (windowManager.isKeyPressed(GLFW.GLFW_KEY_O))
+            pointLight.getPosition().x += 0.1f;
+
+        if (windowManager.isKeyPressed(GLFW.GLFW_KEY_P))
+            pointLight.getPosition().x -= 0.1f;
     }
 
     @Override
