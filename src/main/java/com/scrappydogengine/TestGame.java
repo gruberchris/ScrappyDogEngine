@@ -8,7 +8,6 @@ import com.scrappydogengine.core.lighting.PointLight;
 import com.scrappydogengine.core.utils.Consts;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
 
 public class TestGame implements ILogic {
     private static final float CAMERA_MOVE_SPEED = 0.05f;
