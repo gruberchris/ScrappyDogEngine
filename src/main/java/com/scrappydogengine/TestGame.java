@@ -4,6 +4,7 @@ import com.scrappydogengine.core.*;
 import com.scrappydogengine.core.entity.Entity;
 import com.scrappydogengine.core.entity.Texture;
 import com.scrappydogengine.core.lighting.DirectionalLight;
+import com.scrappydogengine.core.lighting.PointLight;
 import com.scrappydogengine.core.utils.Consts;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
@@ -21,6 +22,7 @@ public class TestGame implements ILogic {
     private Entity entity;
     private float lightAngle;
     private DirectionalLight directionalLight;
+    private PointLight pointLight;
 
     public TestGame() {
         renderManager = new RenderManager();
@@ -34,13 +36,22 @@ public class TestGame implements ILogic {
     @Override
     public void init() throws Exception {
         renderManager.init();
+
+        // model and model texture
         var model = objectLoader.loadObjModel("/models/bunny.obj");
         model.setTexture(new Texture(objectLoader.loadTexture("textures/grassblock.png")), 1f);
         entity = new Entity(model, new Vector3f(0, 0, -2), new Vector3f(0, 0, 0), 1);
 
-        var lightIntensity = 0.0f;
-        var lightPosition = new Vector3f(-1, -10, 0);
-        var lightColor = new Vector3f(1, 1, 1);
+        var lightIntensity = 1.0f;
+
+        // point lighting
+        Vector3f lightPosition = new Vector3f(0, 0, -3.2f);
+        Vector3f lightColor = new Vector3f(1, 1, 1);
+        pointLight = new PointLight(lightColor, lightPosition, lightIntensity, 0, 0, 1);
+
+        // directional lighting
+        lightPosition = new Vector3f(-1, -10, 0);
+        lightColor = new Vector3f(1, 1, 1);
         directionalLight = new DirectionalLight(lightColor, lightPosition, lightIntensity);
     }
 
@@ -110,7 +121,7 @@ public class TestGame implements ILogic {
 
     @Override
     public void render() {
-        renderManager.render(entity, camera, directionalLight);
+        renderManager.render(entity, camera, directionalLight, pointLight);
     }
 
     @Override
