@@ -4,6 +4,7 @@ import com.scrappydogengine.Launcher;
 import com.scrappydogengine.core.entity.Entity;
 import com.scrappydogengine.core.lighting.DirectionalLight;
 import com.scrappydogengine.core.lighting.PointLight;
+import com.scrappydogengine.core.lighting.SpotLight;
 import com.scrappydogengine.core.utils.Consts;
 import com.scrappydogengine.core.utils.Transformation;
 import com.scrappydogengine.core.utils.Utils;
@@ -23,6 +24,7 @@ public class RenderManager {
     private final String specularPowerUniformName = "specularPower";
     private final String directionalLightUniformName = "directionalLight";
     private final String pointLightUniformName = "pointLight";
+    private final String spotLightUniformName = "spotLight";
 
     private ShaderManager shaderManager;
 
@@ -44,9 +46,10 @@ public class RenderManager {
         shaderManager.createUniform(specularPowerUniformName);
         shaderManager.createDirectionalLightUniform(directionalLightUniformName);
         shaderManager.createPointLightUniform(pointLightUniformName);
+        shaderManager.createSpotLightUniform(spotLightUniformName);
     }
 
-    public void render(Entity entity, Camera camera, DirectionalLight directionalLight, PointLight pointLight) {
+    public void render(Entity entity, Camera camera, DirectionalLight directionalLight, PointLight pointLight, SpotLight spotLight) {
         var model = entity.getModel();
 
         clear();
@@ -66,6 +69,7 @@ public class RenderManager {
         shaderManager.setUniform(specularPowerUniformName, Consts.SPECULAR_POWER);
         shaderManager.setUniform(directionalLightUniformName, directionalLight);
         shaderManager.setUniform(pointLightUniformName, pointLight);
+        shaderManager.setUniform(spotLightUniformName, spotLight);
 
         GL30.glBindVertexArray(model.getId());
         GL20.glEnableVertexAttribArray(0);

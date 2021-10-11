@@ -29,12 +29,19 @@ struct PointLight {
     float exponent;
 };
 
+struct SpotLight {
+    PointLight pl;
+    vec3 conedir;
+    float cutoff;
+};
+
 uniform sampler2D textureSampler;
 uniform vec3 ambientLight;
 uniform Material material;
 uniform float specularPower;
 uniform DirectionalLight directionalLight;
 uniform PointLight pointLight;
+uniform SpotLight spotLight;
 
 vec4 ambientC;
 vec4 diffuseC;
@@ -82,6 +89,21 @@ vec4 calcPointLight(PointLight pointLight, vec3 position, vec3 normal) {
     return light_color / attenuationInv;
 }
 
+vec4 calcSpotLight(SpotLight spotLight, vec3 position, vec3 normal) {
+    vec3 light_direction = spotLight.pl.position - position;
+    vec3 to_light_direction = normalize(light_direction);
+    vec3 from_light_direction = -to_light_direction;
+    float spot_alpha = dot(from_light_direction, normalize(spotLight.conedir));
+    vec4 color = vec4(0, 0, 0, 0);
+
+    if (spot_alpha > spotLight.cutoff) {
+        color = calcPointLight(spotLight.pl, position, normal);
+        color += (1.0 - (1.0 - spot_alpha) / (1.0 - spotLight.cutoff));
+    }
+
+    return color;
+}
+
 vec4 calcDirectionalLight(DirectionalLight directionalLight, vec3 position, vec3 normal) {
     return calcLightColor(directionalLight.color, directionalLight.intensity, position, normalize(directionalLight.direction), normal);
 }
@@ -91,6 +113,7 @@ void main() {
 
     vec4 diffuseSpecularComp = calcDirectionalLight(directionalLight, fragPos, fragNormal);
     diffuseSpecularComp += calcPointLight(pointLight, fragPos, fragNormal);
+    diffuseSpecularComp += calcSpotLight(spotLight, fragPos, fragNormal);
 
     fragmentColor = ambientC * vec4(ambientLight, 1) + diffuseSpecularComp;
 }

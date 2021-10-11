@@ -5,9 +5,11 @@ import com.scrappydogengine.core.entity.Entity;
 import com.scrappydogengine.core.entity.Texture;
 import com.scrappydogengine.core.lighting.DirectionalLight;
 import com.scrappydogengine.core.lighting.PointLight;
+import com.scrappydogengine.core.lighting.SpotLight;
 import com.scrappydogengine.core.utils.Consts;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.system.CallbackI;
 
 public class TestGame implements ILogic {
     private static final float CAMERA_MOVE_SPEED = 0.05f;
@@ -22,6 +24,7 @@ public class TestGame implements ILogic {
     private float lightAngle;
     private DirectionalLight directionalLight;
     private PointLight pointLight;
+    private SpotLight spotLight;
 
     public TestGame() {
         renderManager = new RenderManager();
@@ -47,6 +50,11 @@ public class TestGame implements ILogic {
         Vector3f lightPosition = new Vector3f(0, 0, -3.2f);
         Vector3f lightColor = new Vector3f(1, 1, 1);
         pointLight = new PointLight(lightColor, lightPosition, lightIntensity, 0, 0, 1);
+
+        // spot light
+        Vector3f coneDirection = new Vector3f(0, 0, -3.2f);
+        float cutoff = (float) Math.cos(Math.toRadians(180));
+        spotLight = new SpotLight(new PointLight(lightColor, new Vector3f(0, 0, 1f), lightIntensity, 0, 0, 1), coneDirection, cutoff);
 
         // directional lighting
         lightPosition = new Vector3f(-1, -10, 0);
@@ -75,6 +83,14 @@ public class TestGame implements ILogic {
 
         if (windowManager.isKeyPressed(GLFW.GLFW_KEY_X))
             cameraInc.y = 1;
+
+        var lightPos = spotLight.getPointLight().getPosition().z;
+
+        if (windowManager.isKeyPressed(GLFW.GLFW_KEY_N))
+            spotLight.getPointLight().getColor().z = lightPos + 0.1f;
+
+        if (windowManager.isKeyPressed(GLFW.GLFW_KEY_M))
+            spotLight.getPointLight().getColor().z = lightPos - 0.1f;
 
         if (windowManager.isKeyPressed(GLFW.GLFW_KEY_C)) {
             camera.setPosition(0, 0, 0);
@@ -126,7 +142,7 @@ public class TestGame implements ILogic {
 
     @Override
     public void render() {
-        renderManager.render(entity, camera, directionalLight, pointLight);
+        renderManager.render(entity, camera, directionalLight, pointLight, spotLight);
     }
 
     @Override
