@@ -23,8 +23,8 @@ public class RenderManager {
     private final String materialUniformName = "material";
     private final String specularPowerUniformName = "specularPower";
     private final String directionalLightUniformName = "directionalLight";
-    private final String pointLightUniformName = "pointLight";
-    private final String spotLightUniformName = "spotLight";
+    private final String pointLightListUniformName = "pointLights";
+    private final String spotLightListUniformName = "spotLights";
 
     private ShaderManager shaderManager;
 
@@ -45,11 +45,11 @@ public class RenderManager {
         shaderManager.createMaterialUniform(materialUniformName);
         shaderManager.createUniform(specularPowerUniformName);
         shaderManager.createDirectionalLightUniform(directionalLightUniformName);
-        shaderManager.createPointLightUniform(pointLightUniformName);
-        shaderManager.createSpotLightUniform(spotLightUniformName);
+        shaderManager.createPointLightListUniform(pointLightListUniformName, 5);
+        shaderManager.createSpotLightListUniform(spotLightListUniformName, 5);
     }
 
-    public void render(Entity entity, Camera camera, DirectionalLight directionalLight, PointLight pointLight, SpotLight spotLight) {
+    public void render(Entity entity, Camera camera, DirectionalLight directionalLight, PointLight[] pointLights, SpotLight[] spotLights) {
         var model = entity.getModel();
 
         clear();
@@ -68,8 +68,18 @@ public class RenderManager {
         shaderManager.setUniform(materialUniformName, entity.getModel().getMaterial());
         shaderManager.setUniform(specularPowerUniformName, Consts.SPECULAR_POWER);
         shaderManager.setUniform(directionalLightUniformName, directionalLight);
-        shaderManager.setUniform(pointLightUniformName, pointLight);
-        shaderManager.setUniform(spotLightUniformName, spotLight);
+
+        var numLights = spotLights != null ? spotLights.length : 0;
+        
+        for (var i = 0; i < numLights; i++) {
+            shaderManager.setUniform("spotLights", spotLights[i], i);
+        }
+
+        numLights = pointLights != null ? pointLights.length : 0;
+
+        for (var i = 0; i < numLights; i++) {
+            shaderManager.setUniform("pointLights", pointLights[i], i);
+        }
 
         GL30.glBindVertexArray(model.getId());
         GL20.glEnableVertexAttribArray(0);

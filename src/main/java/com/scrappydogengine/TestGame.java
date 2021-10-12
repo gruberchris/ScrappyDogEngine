@@ -9,7 +9,6 @@ import com.scrappydogengine.core.lighting.SpotLight;
 import com.scrappydogengine.core.utils.Consts;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.system.CallbackI;
 
 public class TestGame implements ILogic {
     private static final float CAMERA_MOVE_SPEED = 0.05f;
@@ -21,10 +20,10 @@ public class TestGame implements ILogic {
     private final Vector3f cameraInc;
 
     private Entity entity;
-    private float lightAngle;
+    private float lightAngle, spotAngle = 0, spotInc = 1;
     private DirectionalLight directionalLight;
-    private PointLight pointLight;
-    private SpotLight spotLight;
+    private PointLight[] pointLights;
+    private SpotLight[] spotLights;
 
     public TestGame() {
         renderManager = new RenderManager();
@@ -49,17 +48,22 @@ public class TestGame implements ILogic {
         // point lighting
         Vector3f lightPosition = new Vector3f(0, 0, -3.2f);
         Vector3f lightColor = new Vector3f(1, 1, 1);
-        pointLight = new PointLight(lightColor, lightPosition, lightIntensity, 0, 0, 1);
+        var pointLight = new PointLight(lightColor, lightPosition, lightIntensity, 0, 0, 1);
 
-        // spot light
+        // spotlight
         Vector3f coneDirection = new Vector3f(0, 0, -3.2f);
         float cutoff = (float) Math.cos(Math.toRadians(180));
-        spotLight = new SpotLight(new PointLight(lightColor, new Vector3f(0, 0, 1f), lightIntensity, 0, 0, 1), coneDirection, cutoff);
+        var spotLight = new SpotLight(new PointLight(lightColor, new Vector3f(0, 0, 1f), lightIntensity, 0, 0, 1), coneDirection, cutoff);
+
+        var spotLight2 = new SpotLight(pointLight, coneDirection, cutoff);
 
         // directional lighting
         lightPosition = new Vector3f(-1, -10, 0);
         lightColor = new Vector3f(1, 1, 1);
         directionalLight = new DirectionalLight(lightColor, lightPosition, lightIntensity);
+
+        pointLights = new PointLight[] { pointLight };
+        spotLights = new SpotLight[] { spotLight, spotLight2 };
     }
 
     @Override
@@ -84,13 +88,13 @@ public class TestGame implements ILogic {
         if (windowManager.isKeyPressed(GLFW.GLFW_KEY_X))
             cameraInc.y = 1;
 
-        var lightPos = spotLight.getPointLight().getPosition().z;
+        var lightPos = spotLights[0].getPointLight().getPosition().z;
 
         if (windowManager.isKeyPressed(GLFW.GLFW_KEY_N))
-            spotLight.getPointLight().getColor().z = lightPos + 0.1f;
+            spotLights[0].getPointLight().getColor().z = lightPos + 0.1f;
 
         if (windowManager.isKeyPressed(GLFW.GLFW_KEY_M))
-            spotLight.getPointLight().getColor().z = lightPos - 0.1f;
+            spotLights[0].getPointLight().getColor().z = lightPos - 0.1f;
 
         if (windowManager.isKeyPressed(GLFW.GLFW_KEY_C)) {
             camera.setPosition(0, 0, 0);
@@ -98,10 +102,10 @@ public class TestGame implements ILogic {
         }
 
         if (windowManager.isKeyPressed(GLFW.GLFW_KEY_O))
-            pointLight.getPosition().x += 0.1f;
+            pointLights[0].getPosition().x += 0.1f;
 
         if (windowManager.isKeyPressed(GLFW.GLFW_KEY_P))
-            pointLight.getPosition().x -= 0.1f;
+            pointLights[0].getPosition().x -= 0.1f;
     }
 
     @Override
@@ -114,6 +118,17 @@ public class TestGame implements ILogic {
         }
 
         // entity.incrementRotation(0.0f, 0.25f, 0.0f);
+
+        spotAngle += spotInc * 0.5f;
+
+        if (spotAngle > 4)
+            spotInc = -1;
+        else if (spotAngle <= -4)
+            spotInc = 1;
+
+        var spotAngleRad = Math.toRadians(spotAngle);
+        var coneDirection = spotLights[0].getPointLight().getPosition();
+        coneDirection.y = (float) Math.sin(spotAngleRad);
 
         // a basic day-night environment light cycle
         lightAngle += 0.5f;
@@ -142,7 +157,7 @@ public class TestGame implements ILogic {
 
     @Override
     public void render() {
-        renderManager.render(entity, camera, directionalLight, pointLight, spotLight);
+        renderManager.render(entity, camera, directionalLight, pointLights, spotLights);
     }
 
     @Override
