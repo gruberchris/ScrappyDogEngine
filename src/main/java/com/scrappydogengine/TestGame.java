@@ -39,23 +39,24 @@ public class TestGame implements ILogic {
         renderManager.init();
 
         // model and model texture
-        var model = objectLoader.loadObjModel("/models/bunny.obj");
+        var model = objectLoader.loadObjModel("/models/cube.obj");
         model.setTexture(new Texture(objectLoader.loadTexture("textures/grassblock.png")), 1f);
-        entity = new Entity(model, new Vector3f(0, 0, -2), new Vector3f(0, 0, 0), 1);
+        entity = new Entity(model, new Vector3f(0, 0, -5), new Vector3f(0, 0, 0), 1);
 
         var lightIntensity = 1.0f;
 
         // point lighting
-        Vector3f lightPosition = new Vector3f(0, 0, -3.2f);
+        Vector3f lightPosition = new Vector3f(-0.5f, -0.5f, -3.2f);
         Vector3f lightColor = new Vector3f(1, 1, 1);
         var pointLight = new PointLight(lightColor, lightPosition, lightIntensity, 0, 0, 1);
 
         // spotlight
-        Vector3f coneDirection = new Vector3f(0, 0, -3.2f);
-        float cutoff = (float) Math.cos(Math.toRadians(180));
-        var spotLight = new SpotLight(new PointLight(lightColor, new Vector3f(0, 0, 1f), lightIntensity, 0, 0, 1), coneDirection, cutoff);
+        Vector3f coneDirection = new Vector3f(0, 0, -1);
+        float cutoff = (float) Math.cos(Math.toRadians(140));
+        var spotLight = new SpotLight(new PointLight(lightColor, new Vector3f(0, 0, -3.6f), lightIntensity, 0, 0, 0.2f), coneDirection, cutoff);
 
-        var spotLight2 = new SpotLight(pointLight, coneDirection, cutoff);
+        var spotLight2 = new SpotLight(new PointLight(lightColor, lightPosition, lightIntensity, 0, 0, 1), coneDirection, cutoff);
+        spotLight2.getPointLight().setPosition(new Vector3f(0.5f, 0.5f, -3.6f));
 
         // directional lighting
         lightPosition = new Vector3f(-1, -10, 0);

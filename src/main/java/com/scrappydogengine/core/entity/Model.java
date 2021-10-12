@@ -1,10 +1,8 @@
 package com.scrappydogengine.core.entity;
 
-import org.w3c.dom.Text;
-
 public class Model {
-    private int id;
-    private int vertexCount;
+    private final int id;
+    private final int vertexCount;
     private Material material;
 
     public Model(int id, int vertexCount) {
