@@ -19,3 +19,4 @@ A Lightweight Java OpenGL game engine implementation written while following a g
 14. [Point Light](https://youtu.be/kxYo5Eg7YXk)
 15. [Spot Light](https://youtu.be/hTBWfL1f_8U)
 16. [Multiple Lights](https://youtu.be/jkidq87bAqY)
+17. [Improving Rendering](https://youtu.be/wlKz9k7JsBM)

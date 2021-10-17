@@ -10,16 +10,22 @@ import com.scrappydogengine.core.utils.Consts;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class TestGame implements ILogic {
     private static final float CAMERA_MOVE_SPEED = 0.05f;
 
     private final RenderManager renderManager;
     private final WindowManager windowManager;
     private final ObjectLoader objectLoader;
+
+    private List<Entity> entities;
     private final Camera camera;
+
     private final Vector3f cameraInc;
 
-    private Entity entity;
     private float lightAngle, spotAngle = 0, spotInc = 1;
     private DirectionalLight directionalLight;
     private PointLight[] pointLights;
@@ -41,7 +47,25 @@ public class TestGame implements ILogic {
         // model and model texture
         var model = objectLoader.loadObjModel("/models/cube.obj");
         model.setTexture(new Texture(objectLoader.loadTexture("textures/grassblock.png")), 1f);
-        entity = new Entity(model, new Vector3f(0, 0, -5), new Vector3f(0, 0, 0), 1);
+
+        entities = new ArrayList<>();
+        var rnd = new Random();
+
+        for (var i = 0; i < 200; i++) {
+            // renders 200 entities of the same model and texture
+            var x = rnd.nextFloat() * 100 - 50;
+            var y = rnd.nextFloat() * 100 - 50;
+            var z = rnd.nextFloat() * -300;
+
+            var entityPosition = new Vector3f(x, y, z);
+            var entityRotation = new Vector3f(rnd.nextFloat() * 180, rnd.nextFloat() * 180, 0);
+            var entityScale = 1;
+
+            entities.add(new Entity(model, entityPosition, entityRotation, entityScale));
+        }
+
+        entities.add(new Entity(model, new Vector3f(0, 0, -2f), new Vector3f(0, 0, 0), 1));
+        // entity = new Entity(model, new Vector3f(0, 0, -5), new Vector3f(0, 0, 0), 1);
 
         var lightIntensity = 1.0f;
 
@@ -154,11 +178,15 @@ public class TestGame implements ILogic {
         var angRad = Math.toRadians(lightAngle);
         directionalLight.getDirection().x = (float) Math.sin(angRad);
         directionalLight.getDirection().y = (float) Math.cos(angRad);
+
+        for (var entity : entities) {
+            renderManager.processEntity(entity);
+        }
     }
 
     @Override
     public void render() {
-        renderManager.render(entity, camera, directionalLight, pointLights, spotLights);
+        renderManager.render(camera, directionalLight, pointLights, spotLights);
     }
 
     @Override
