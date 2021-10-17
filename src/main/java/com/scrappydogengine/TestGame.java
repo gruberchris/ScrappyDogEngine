@@ -64,8 +64,11 @@ public class TestGame implements ILogic {
             entities.add(new Entity(model, entityPosition, entityRotation, entityScale));
         }
 
-        entities.add(new Entity(model, new Vector3f(0, 0, -2f), new Vector3f(0, 0, 0), 1));
-        // entity = new Entity(model, new Vector3f(0, 0, -5), new Vector3f(0, 0, 0), 1);
+        // TODO: There is a bug somewhere that appears to prevent the texture from rendering with the model.
+        //          The entity below is the only one that has a texture. But changing the position Z value to -5f
+        //          makes the texture not appear. -4f the texture is visable but looks washed out. The texture appears
+        //          "normal" with a Z value of -2f.
+        entities.add(new Entity(model, new Vector3f(0, 0, -3f), new Vector3f(0, 0, 0), 1));
 
         var lightIntensity = 1.0f;
 
