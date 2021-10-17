@@ -2,13 +2,24 @@ plugins {
     id 'java'
 }
 
+group 'com.scrappydogengine'
+version '1.0-SNAPSHOT'
+
 project.ext.lwjglVersion = "3.2.3"
-project.ext.lwjglNatives = "natives-windows"
 project.ext.jomlVersion = "1.10.0"
 project.ext.jomlPrimVersion = "1.10.0"
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+switch (org.gradle.internal.os.OperatingSystem.current()) {
+    case org.gradle.internal.os.OperatingSystem.LINUX:
+        project.ext.lwjglNatives = "natives-linux"
+        break
+    case org.gradle.internal.os.OperatingSystem.MAC_OS:
+        project.ext.lwjglNatives = "natives-macos"
+        break
+    case org.gradle.internal.os.OperatingSystem.WINDOWS:
+        project.ext.lwjglNatives = "natives-windows"
+        break
+}
 
 repositories {
     mavenCentral()
@@ -17,47 +28,46 @@ repositories {
 dependencies {
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
 
-    implementation "org.joml:joml:${jomlVersion}"
-    implementation "org.joml:joml-primitives:${jomlPrimVersion}"
+    implementation "org.joml:joml:1.10.2"
+    implementation "org.joml:joml-primitives:1.10.0"
 
-    implementation "org.lwjgl:lwjgl"
-    implementation "org.lwjgl:lwjgl-assimp"
-    implementation "org.lwjgl:lwjgl-bgfx"
-    implementation "org.lwjgl:lwjgl-cuda"
-    implementation "org.lwjgl:lwjgl-egl"
-    implementation "org.lwjgl:lwjgl-glfw"
-    implementation "org.lwjgl:lwjgl-jawt"
-    implementation "org.lwjgl:lwjgl-jemalloc"
-    implementation "org.lwjgl:lwjgl-libdivide"
-    implementation "org.lwjgl:lwjgl-llvm"
-    implementation "org.lwjgl:lwjgl-lmdb"
-    implementation "org.lwjgl:lwjgl-lz4"
-    implementation "org.lwjgl:lwjgl-meow"
-    implementation "org.lwjgl:lwjgl-nanovg"
-    implementation "org.lwjgl:lwjgl-nfd"
-    implementation "org.lwjgl:lwjgl-nuklear"
-    implementation "org.lwjgl:lwjgl-odbc"
-    implementation "org.lwjgl:lwjgl-openal"
-    implementation "org.lwjgl:lwjgl-opencl"
-    implementation "org.lwjgl:lwjgl-opengl"
-    implementation "org.lwjgl:lwjgl-opengles"
-    implementation "org.lwjgl:lwjgl-openvr"
-    implementation "org.lwjgl:lwjgl-opus"
-    implementation "org.lwjgl:lwjgl-ovr"
-    implementation "org.lwjgl:lwjgl-par"
-    implementation "org.lwjgl:lwjgl-remotery"
-    implementation "org.lwjgl:lwjgl-rpmalloc"
-    implementation "org.lwjgl:lwjgl-shaderc"
-    implementation "org.lwjgl:lwjgl-sse"
-    implementation "org.lwjgl:lwjgl-stb"
-    implementation "org.lwjgl:lwjgl-tinyexr"
-    implementation "org.lwjgl:lwjgl-tinyfd"
-    implementation "org.lwjgl:lwjgl-tootle"
-    implementation "org.lwjgl:lwjgl-vma"
-    implementation "org.lwjgl:lwjgl-vulkan"
-    implementation "org.lwjgl:lwjgl-xxhash"
-    implementation "org.lwjgl:lwjgl-yoga"
-    implementation "org.lwjgl:lwjgl-zstd"
+    implementation "org.lwjgl:lwjgl:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-assimp:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-bgfx:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-cuda:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-egl:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-glfw:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-jawt:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-jemalloc:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-libdivide:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-llvm:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-lmdb:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-lz4:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-meow:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-nanovg:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-nfd:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-nuklear:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-odbc:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-openal:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-opencl:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-opengl:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-opengles:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-openvr:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-opus:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-par:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-remotery:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-rpmalloc:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-shaderc:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-sse:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-stb:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-tinyexr:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-tinyfd:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-tootle:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-vma:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-vulkan:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-xxhash:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-yoga:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-zstd:$lwjglVersion"
     runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-assimp::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-bgfx::$lwjglNatives"
@@ -76,7 +86,6 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-opengles::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-openvr::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-opus::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-ovr::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-par::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-remotery::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-rpmalloc::$lwjglNatives"
