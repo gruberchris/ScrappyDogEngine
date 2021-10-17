@@ -14,7 +14,6 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 public class RenderManager {
-    private final WindowManager windowManager;
     private final String textureSamplerUniformName = "textureSampler";
     private final String transformationMatrixUniformName = "transformationMatrix";
     private final String projectionMatrixUniformName = "projectionMatrix";
@@ -26,6 +25,7 @@ public class RenderManager {
     private final String pointLightListUniformName = "pointLights";
     private final String spotLightListUniformName = "spotLights";
 
+    private final WindowManager windowManager;
     private ShaderManager shaderManager;
 
     public RenderManager() {
