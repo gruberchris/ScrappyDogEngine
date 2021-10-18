@@ -11,8 +11,11 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -195,8 +198,16 @@ public class ObjectLoader {
         vbos.add(vbo);
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, vbo);
 
-        var buffer = Utils.storeDataInIntegerBuffer(indices);
-        GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
+        IntBuffer buffer = null;
+
+        try {
+            buffer = Utils.storeDataInIntegerBuffer(indices);
+            GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
+        } finally {
+            if (buffer != null) {
+                MemoryUtil.memFree(buffer);
+            }
+        }
     }
 
     private void storeDataInAttribList(int attribNo, int vertexCount, float[] data) {
@@ -204,10 +215,18 @@ public class ObjectLoader {
         vbos.add(vbo);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
 
-        var buffer = Utils.storeDataInFloatBuffer(data);
-        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
-        GL20.glVertexAttribPointer(attribNo, vertexCount, GL11.GL_FLOAT, false, 0, 0);
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+        FloatBuffer buffer = null;
+
+        try {
+            buffer = Utils.storeDataInFloatBuffer(data);
+            GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
+            GL20.glVertexAttribPointer(attribNo, vertexCount, GL11.GL_FLOAT, false, 0, 0);
+            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+        } finally {
+            if (buffer != null) {
+                MemoryUtil.memFree(buffer);
+            }
+        }
     }
 
     private void unbind() {
