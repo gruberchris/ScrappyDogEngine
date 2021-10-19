@@ -101,7 +101,7 @@ vec4 calcSpotLight(SpotLight spotLight, vec3 position, vec3 normal) {
 
     if (spot_alpha > spotLight.cutoff) {
         color = calcPointLight(spotLight.pl, position, normal);
-        color += (1.0 - (1.0 - spot_alpha) / (1.0 - spotLight.cutoff));
+        color *= (1.0 - (1.0 - spot_alpha) / (1.0 - spotLight.cutoff));
     }
 
     return color;
