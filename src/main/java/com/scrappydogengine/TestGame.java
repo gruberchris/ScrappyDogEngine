@@ -64,34 +64,35 @@ public class TestGame implements ILogic {
             entities.add(new Entity(model, entityPosition, entityRotation, entityScale));
         }
 
-        // TODO: There is a bug somewhere that appears to prevent the texture from rendering with the model.
-        //          The entity below is the only one that has a texture. But changing the position Z value to -5f
-        //          makes the texture not appear. -4f the texture is visable but looks washed out. The texture appears
-        //          "normal" with a Z value of -2f.
         entities.add(new Entity(model, new Vector3f(0, 0, -3f), new Vector3f(0, 0, 0), 1));
 
-        var lightIntensity = 1.0f;
+        var directionalLightIntensity = 1;
+        var pointLightIntensity = 1;
+
+        // light intensity from either of these 2 spotlights overpowered the scene so set to 0
+        var spotLightIntensity = 0;
+        var spotLight2Intensity = 0;
 
         // point lighting
         Vector3f lightPosition = new Vector3f(-0.5f, -0.5f, -3.2f);
         Vector3f lightColor = new Vector3f(1, 1, 1);
-        var pointLight = new PointLight(lightColor, lightPosition, lightIntensity, 0, 0, 1);
+        var pointLight = new PointLight(lightColor, lightPosition, pointLightIntensity, 0, 0, 1);
+        pointLights = new PointLight[]{pointLight};
 
         // spotlight
         Vector3f coneDirection = new Vector3f(0, 0, -1);
         float cutoff = (float) Math.cos(Math.toRadians(140));
-        var spotLight = new SpotLight(new PointLight(lightColor, new Vector3f(0, 0, -3.6f), lightIntensity, 0, 0, 0.2f), coneDirection, cutoff);
+        var spotLight = new SpotLight(new PointLight(lightColor, new Vector3f(0, 0, -3.6f), spotLightIntensity, 0, 0, 0.2f), coneDirection, cutoff);
 
-        var spotLight2 = new SpotLight(new PointLight(lightColor, lightPosition, lightIntensity, 0, 0, 1), coneDirection, cutoff);
+        var spotLight2 = new SpotLight(new PointLight(lightColor, lightPosition, spotLight2Intensity, 0, 0, 1), coneDirection, cutoff);
         spotLight2.getPointLight().setPosition(new Vector3f(0.5f, 0.5f, -3.6f));
+
+        spotLights = new SpotLight[]{spotLight, spotLight2};
 
         // directional lighting
         lightPosition = new Vector3f(-1, -10, 0);
         lightColor = new Vector3f(1, 1, 1);
-        directionalLight = new DirectionalLight(lightColor, lightPosition, lightIntensity);
-
-        pointLights = new PointLight[] { pointLight };
-        spotLights = new SpotLight[] { spotLight, spotLight2 };
+        directionalLight = new DirectionalLight(lightColor, lightPosition, directionalLightIntensity);
     }
 
     @Override
