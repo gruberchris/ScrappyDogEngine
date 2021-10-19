@@ -66,12 +66,11 @@ public class TestGame implements ILogic {
 
         entities.add(new Entity(model, new Vector3f(0, 0, -3f), new Vector3f(0, 0, 0), 1));
 
+        // light intensities
         var directionalLightIntensity = 1;
         var pointLightIntensity = 1;
-
-        // light intensity from either of these 2 spotlights overpowered the scene so set to 0
-        var spotLightIntensity = 0;
-        var spotLight2Intensity = 0;
+        var spotLightIntensity = 1;
+        var spotLight2Intensity = 0.5f;
 
         // point lighting
         Vector3f lightPosition = new Vector3f(-0.5f, -0.5f, -3.2f);
