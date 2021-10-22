@@ -1,6 +1,5 @@
 package com.scrappydogengine.core;
 
-import com.scrappydogengine.Launcher;
 import com.scrappydogengine.core.utils.Consts;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;

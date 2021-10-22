@@ -1,6 +1,5 @@
 package com.scrappydogengine.core;
 
-import com.scrappydogengine.Launcher;
 import com.scrappydogengine.core.entity.Entity;
 import com.scrappydogengine.core.entity.Model;
 import com.scrappydogengine.core.lighting.DirectionalLight;

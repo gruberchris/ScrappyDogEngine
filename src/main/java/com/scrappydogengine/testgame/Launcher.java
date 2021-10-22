@@ -1,4 +1,4 @@
-package com.scrappydogengine;
+package com.scrappydogengine.testgame;
 
 import com.scrappydogengine.core.EngineManager;
 import com.scrappydogengine.core.WindowManager;
