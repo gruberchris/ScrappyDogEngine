@@ -31,9 +31,9 @@ public class TestGame implements ILogic {
     private PointLight[] pointLights;
     private SpotLight[] spotLights;
 
-    public TestGame() {
-        renderManager = new RenderManager();
-        windowManager = Launcher.getWindowManager();
+    public TestGame(WindowManager windowManager) {
+        this.windowManager = windowManager;
+        renderManager = new RenderManager(windowManager);
         objectLoader = new ObjectLoader();
         camera = new Camera();
         cameraInc = new Vector3f(0, 0, 0);

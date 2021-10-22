@@ -36,8 +36,8 @@ public class RenderManager {
 
     private final Map<Model, List<Entity>> entities = new HashMap<>();
 
-    public RenderManager() {
-        windowManager = Launcher.getWindowManager();
+    public RenderManager(WindowManager windowManager) {
+        this.windowManager = windowManager;
     }
 
     public void init() throws Exception {

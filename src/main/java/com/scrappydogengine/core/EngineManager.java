@@ -22,13 +22,13 @@ public class EngineManager {
     private GLFWErrorCallback errorCallback;
     private ILogic gameLogic;
 
-    public EngineManager(ILogic gameLogic) {
+    public EngineManager(WindowManager windowManager, ILogic gameLogic) {
+        this.windowManager = windowManager;
         this.gameLogic = gameLogic;
     }
 
     private void init() throws Exception {
         GLFW.glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
-        windowManager = Launcher.getWindowManager();
         mouseInput = new MouseInput(windowManager);
 
         windowManager.init();
