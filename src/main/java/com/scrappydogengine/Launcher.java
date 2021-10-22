@@ -6,12 +6,12 @@ import com.scrappydogengine.core.utils.Consts;
 
 public class Launcher {
     private static WindowManager windowManager;
-    private static TestGame testGame;
 
     public static void main(String[] args) {
         windowManager = new WindowManager(Consts.TITLE, 1600, 900, false);
-        testGame = new TestGame();
-        var engineManager = new EngineManager();
+
+        var testGame = new TestGame();
+        var engineManager = new EngineManager(testGame);
 
         try {
             engineManager.start();
@@ -22,9 +22,5 @@ public class Launcher {
 
     public static WindowManager getWindowManager() {
         return windowManager;
-    }
-
-    public static TestGame getTestGame() {
-        return testGame;
     }
 }

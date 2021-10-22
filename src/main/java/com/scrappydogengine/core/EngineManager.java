@@ -18,15 +18,18 @@ public class EngineManager {
 
     private boolean isRunning;
     private WindowManager windowManager;
-    private  MouseInput mouseInput;
+    private MouseInput mouseInput;
     private GLFWErrorCallback errorCallback;
     private ILogic gameLogic;
+
+    public EngineManager(ILogic gameLogic) {
+        this.gameLogic = gameLogic;
+    }
 
     private void init() throws Exception {
         GLFW.glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
         windowManager = Launcher.getWindowManager();
         mouseInput = new MouseInput(windowManager);
-        gameLogic = Launcher.getTestGame();
 
         windowManager.init();
         gameLogic.init();
