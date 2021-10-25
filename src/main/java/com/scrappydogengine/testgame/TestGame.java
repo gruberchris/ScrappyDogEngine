@@ -6,6 +6,7 @@ import com.scrappydogengine.core.entity.Texture;
 import com.scrappydogengine.core.lighting.DirectionalLight;
 import com.scrappydogengine.core.lighting.PointLight;
 import com.scrappydogengine.core.lighting.SpotLight;
+import com.scrappydogengine.core.rendering.RenderManager;
 import com.scrappydogengine.core.utils.Consts;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;

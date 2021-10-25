@@ -16,10 +16,10 @@ public class EngineManager {
     private static int fps;
 
     private boolean isRunning;
-    private WindowManager windowManager;
+    private final WindowManager windowManager;
     private MouseInput mouseInput;
     private GLFWErrorCallback errorCallback;
-    private ILogic gameLogic;
+    private final ILogic gameLogic;
 
     public EngineManager(WindowManager windowManager, ILogic gameLogic) {
         this.windowManager = windowManager;

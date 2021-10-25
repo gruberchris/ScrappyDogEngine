@@ -1,5 +1,8 @@
-package com.scrappydogengine.core;
+package com.scrappydogengine.core.rendering;
 
+import com.scrappydogengine.core.Camera;
+import com.scrappydogengine.core.ShaderManager;
+import com.scrappydogengine.core.WindowManager;
 import com.scrappydogengine.core.entity.Entity;
 import com.scrappydogengine.core.entity.Model;
 import com.scrappydogengine.core.lighting.DirectionalLight;
