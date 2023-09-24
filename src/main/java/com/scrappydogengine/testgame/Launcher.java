@@ -6,7 +6,7 @@ import com.scrappydogengine.core.utils.Consts;
 
 public class Launcher {
     public static void main(String[] args) {
-        var windowManager = new WindowManager(Consts.TITLE, 1600, 900, false);
+        var windowManager = new WindowManager(Consts.TITLE, 1920, 1080, false);
         var testGame = new TestGame(windowManager);
         var engineManager = new EngineManager(windowManager, testGame);
 
